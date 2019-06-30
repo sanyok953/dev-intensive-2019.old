@@ -39,6 +39,40 @@ object Utils {
         charsMap.put("ю", "yu")
         charsMap.put("я", "ya")
 
+        charsMap.put("А", "A")
+        charsMap.put("Б", "B")
+        charsMap.put("В", "V")
+        charsMap.put("Г", "G")
+        charsMap.put("Д", "D")
+        charsMap.put("Е", "E")
+        charsMap.put("Ё", "E")
+        charsMap.put("Ж", "ZH")
+        charsMap.put("З", "Z")
+        charsMap.put("И", "I")
+        charsMap.put("Й", "I")
+        charsMap.put("К", "K")
+        charsMap.put("Л", "L")
+        charsMap.put("М", "M")
+        charsMap.put("Н", "N")
+        charsMap.put("О", "O")
+        charsMap.put("П", "P")
+        charsMap.put("Р", "R")
+        charsMap.put("С", "S")
+        charsMap.put("Т", "T")
+        charsMap.put("У", "U")
+        charsMap.put("Ф", "F")
+        charsMap.put("Х", "H")
+        charsMap.put("Ц", "C")
+        charsMap.put("Ч", "CH")
+        charsMap.put("Ш", "SH")
+        charsMap.put("Щ", "SH'")
+        charsMap.put("Ъ", "")
+        charsMap.put("Ы", "I")
+        charsMap.put("Ь", "")
+        charsMap.put("Э", "E")
+        charsMap.put("Ю", "YU")
+        charsMap.put("Я", "YA")
+
         if (charsMap.containsKey(value)) {
             resp = charsMap.getValue(value)
         }
@@ -58,7 +92,17 @@ object Utils {
     }
 
     fun transliteration(payload: String, divider: String = " "): String {
-        TODO("not implemented")
+        var trString: String = ""
+        for (c in payload) {
+            if (c.toString() == " ") {
+                trString += divider
+            } else if (charTranslit(c.toString()) != null) {
+                trString += charTranslit(c.toString())
+            } else {
+                trString += c.toString()
+            }
+        }
+        return trString
     }
 
     fun skl(digit: Long, type: Int): String {
