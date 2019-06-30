@@ -12,7 +12,7 @@ const val YEAR = 360 * DAY
 
 fun Date.format(pattern: String = "HH:mm:ss dd.MM.yy"): String {
     val dateFormat = SimpleDateFormat(pattern, Locale("ru"))
-    println(dateFormat)
+    //println(dateFormat)
     return dateFormat.format(this)
 }
 

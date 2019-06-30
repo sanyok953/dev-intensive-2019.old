@@ -1,6 +1,49 @@
 package ru.skillbranch.devintensive.utils
 
 object Utils {
+
+    fun charTranslit(value: String): String? {
+        var charsMap = mutableMapOf<String, String>()
+        var resp: String? = null
+        charsMap.put("а", "a")
+        charsMap.put("б", "b")
+        charsMap.put("в", "v")
+        charsMap.put("г", "g")
+        charsMap.put("д", "d")
+        charsMap.put("е", "e")
+        charsMap.put("ё", "e")
+        charsMap.put("ж", "zh")
+        charsMap.put("з", "z")
+        charsMap.put("и", "i")
+        charsMap.put("й", "i")
+        charsMap.put("к", "k")
+        charsMap.put("л", "l")
+        charsMap.put("м", "m")
+        charsMap.put("н", "n")
+        charsMap.put("о", "o")
+        charsMap.put("п", "p")
+        charsMap.put("р", "r")
+        charsMap.put("с", "s")
+        charsMap.put("т", "t")
+        charsMap.put("у", "u")
+        charsMap.put("ф", "f")
+        charsMap.put("х", "h")
+        charsMap.put("ц", "c")
+        charsMap.put("ч", "ch")
+        charsMap.put("ш", "sh")
+        charsMap.put("щ", "sh'")
+        charsMap.put("ъ", "")
+        charsMap.put("ы", "i")
+        charsMap.put("ь", "")
+        charsMap.put("э", "e")
+        charsMap.put("ю", "yu")
+        charsMap.put("я", "ya")
+
+        if (charsMap.containsKey(value)) {
+            resp = charsMap.getValue(value)
+        }
+        return resp
+    }
     fun parseFullName(fullName: String?): Pair<String?, String?> {
         if (fullName == null || fullName == "" || fullName == " ") {
             return null to null
@@ -32,6 +75,34 @@ object Utils {
     }
 
     fun toInitials(firstName: String?, lastName: String?): String? {
-        TODO("not implemented")
+        var initF: String? = null
+        var initL: String? = null
+
+        if (firstName != null) {
+            for (c in firstName) {
+                if (charTranslit(c.toString()) != null) {
+                    initF = charTranslit(c.toString())?.toUpperCase()
+                } else {
+                    initF = c.toString().toUpperCase()
+                }
+                break
+            }
+
+        }
+
+        if (lastName != null) {
+            for (ch in lastName) {
+                if (charTranslit(ch.toString()) != null) {
+                    initL = charTranslit(ch.toString())?.toUpperCase()
+                } else {
+                    initL = ch.toString().toUpperCase()
+                }
+                break
+            }
+
+        }
+
+        return "$initF$initL"
     }
+
 }
