@@ -122,31 +122,38 @@ object Utils {
         var initF: String? = null
         var initL: String? = null
 
-        if (firstName != null) {
-            for (c in firstName) {
-                if (charTranslit(c.toString()) != null) {
-                    initF = charTranslit(c.toString())?.toUpperCase()
-                } else {
-                    initF = c.toString().toUpperCase()
+        if (firstName != null || firstName != " " || firstName != "") {
+            if (firstName != null) {
+                for (c in firstName) {
+                    if (c.toString() != null) {
+                        initF = c.toString().toUpperCase()
+                    } else {
+                        initF = null
+                    }
+                    break
                 }
-                break
             }
-
+        } else {
+            initF = null
         }
 
-        if (lastName != null) {
-            for (ch in lastName) {
-                if (charTranslit(ch.toString()) != null) {
-                    initL = charTranslit(ch.toString())?.toUpperCase()
-                } else {
-                    initL = ch.toString().toUpperCase()
+        if (lastName != null || lastName != " " || lastName != "") {
+            if (lastName != null) {
+                for (ch in lastName) {
+                    if (ch.toString() != null) {
+                        initL = ch.toString().toUpperCase()
+                    } else {
+                        initL = null
+                    }
+                    break
                 }
-                break
             }
-
+        } else {
+            initL = null
         }
-
-        return "$initF$initL"
+        if (initF == null && initL == null) return null
+        else if (initF != null && initL == null) return initF
+        else return "$initF$initL"
     }
 
 }

@@ -32,14 +32,14 @@ fun Date.humanizeDiff(date: Date = Date()): String {
     val date2 = date.time
     val dtd = date2 - date1
     val dd = when {
-        dtd >= YEAR -> "более года назад"
-        dtd >= DAY + (2 * HOUR) -> "${dtd / DAY} ${Utils.skl(dtd / DAY, 3)} назад"
-        dtd >= DAY - (2 * HOUR) && dtd < DAY + (2 * HOUR) -> "день назад"
-        dtd >= 75 * MINUTE && dtd < DAY - (2 * HOUR) -> "${dtd / HOUR} ${Utils.skl(dtd / HOUR, 2)} назад"
-        dtd >= 45 * MINUTE && dtd < 75 * MINUTE -> "час назад"
-        dtd >= 75 * SECOND && dtd < 45 * MINUTE -> "${dtd / MINUTE} ${Utils.skl(dtd / MINUTE, 1)} назад"
-        dtd >= 45 * SECOND && dtd < 75 * SECOND -> "минуту назад"
-        dtd >= 1 * SECOND && dtd < 45 * SECOND -> "несколько секунд назад"
+        dtd > YEAR -> "более года назад"
+        dtd > DAY + (2 * HOUR) -> "${dtd / DAY} ${Utils.skl(dtd / DAY, 3)} назад"
+        dtd > DAY - (2 * HOUR) && dtd <= DAY + (2 * HOUR) -> "день назад"
+        dtd > 75 * MINUTE && dtd <= DAY - (2 * HOUR) -> "${dtd / HOUR} ${Utils.skl(dtd / HOUR, 2)} назад"
+        dtd > 45 * MINUTE && dtd <= 75 * MINUTE -> "час назад"
+        dtd > 75 * SECOND && dtd <= 45 * MINUTE -> "${dtd / MINUTE} ${Utils.skl(dtd / MINUTE, 1)} назад"
+        dtd > 45 * SECOND && dtd <= 75 * SECOND -> "минуту назад"
+        dtd > 1 * SECOND && dtd <= 45 * SECOND -> "несколько секунд назад"
         dtd <  SECOND -> "только что"
         else -> ""
     }
