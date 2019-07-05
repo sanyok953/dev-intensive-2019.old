@@ -31,6 +31,7 @@ fun Date.humanizeDiff(date: Date = Date()): String {
     val date1 = this.time
     val date2 = date.time
     val dtd = date2 - date1
+    //println(dtd)
     val dd = when {
         dtd > YEAR -> "более года назад"
         dtd > DAY + (2 * HOUR) -> "${dtd / DAY} ${Utils.skl(dtd / DAY, 3)} назад"
@@ -52,4 +53,17 @@ enum class TimeUnits {
     MINUTE,
     HOUR,
     DAY
+}
+
+fun TimeUnits.plural(value: Int): String {
+
+    val ret = when(this) {
+        TimeUnits.SECOND -> "$value ${Utils.sklNV(value.toLong(), 4)}"
+        TimeUnits.MINUTE -> "$value ${Utils.sklNV(value.toLong(), 1)}"
+        TimeUnits.HOUR -> "$value ${Utils.sklNV(value.toLong(), 2)}"
+        TimeUnits.DAY -> "$value ${Utils.sklNV(value.toLong(), 3)}"
+    }
+
+    var h = this
+    return ret
 }

@@ -92,7 +92,7 @@ object Utils {
     }
 
     fun transliteration(payload: String, divider: String = " "): String {
-        var trString: String = ""
+        var trString = ""
         for (c in payload) {
             if (c.toString() == " ") {
                 trString += divider
@@ -109,13 +109,50 @@ object Utils {
         val array1 : Array<String> = arrayOf("минуту", "минуты", "минут")
         val array2 : Array<String> = arrayOf("час", "часа", "часов")
         val array3 : Array<String> = arrayOf("день", "дня", "дней")
-        val array: Array<String> = if (type == 1) array1 else if (type == 2) array2 else array3
-        return when(digit % 10) {
+        val array4 : Array<String> = arrayOf("секунда", "секунды", "секунд")
+
+        val array: Array<String> = if (type == 1) array1 else if (type == 2) array2 else if (type == 3) array3 else array4
+        return when(sklCheck(digit)) {
             1L -> array[0]
             2L, 3L, 4L -> array[1]
             else -> array[2]
         }
 
+    }
+
+    fun sklNV(digit: Long, type: Int): String {
+        val array1 : Array<String> = arrayOf("минута", "минуты", "минут")
+        val array2 : Array<String> = arrayOf("час", "часа", "часов")
+        val array3 : Array<String> = arrayOf("день", "дня", "дней")
+        val array4 : Array<String> = arrayOf("секунда", "секунды", "секунд")
+
+        val array: Array<String> = if (type == 1) array1 else if (type == 2) array2 else if (type == 3) array3 else array4
+        return when(sklCheck(digit)) {
+            1L -> array[0]
+            2L, 3L, 4L -> array[1]
+            else -> array[2]
+        }
+
+    }
+
+    fun sklCheck(value: Long): Long {
+        val m = value % 10
+        if (m == 1L || m == 2L || m == 3L || m == 4L) {
+            if (value > 10) {
+                var f = ""
+                var l = ""
+                for (i in value.toString()) {
+                    f = l
+                    l = i.toString()
+                }
+                if ((f+l).contains("11") || ("$f$l").contains("12") || ("$f$l").contains("13") || ("$f$l").contains("14")) {
+                    return 8L
+                }
+            }
+            return m
+        } else {
+            return m
+        }
     }
 
     fun toInitials(firstName: String?, lastName: String?): String? {
