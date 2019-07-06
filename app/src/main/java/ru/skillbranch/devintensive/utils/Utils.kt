@@ -121,10 +121,10 @@ object Utils {
     }
 
     fun sklNV(digit: Long, type: Int): String {
-        val array1 : Array<String> = arrayOf("минута", "минуты", "минут")
+        val array1 : Array<String> = arrayOf("минуту", "минуты", "минут")
         val array2 : Array<String> = arrayOf("час", "часа", "часов")
         val array3 : Array<String> = arrayOf("день", "дня", "дней")
-        val array4 : Array<String> = arrayOf("секунда", "секунды", "секунд")
+        val array4 : Array<String> = arrayOf("секунду", "секунды", "секунд")
 
         val array: Array<String> = if (type == 1) array1 else if (type == 2) array2 else if (type == 3) array3 else array4
         return when(sklCheck(digit)) {
@@ -159,7 +159,7 @@ object Utils {
         var initF: String? = null
         var initL: String? = null
 
-        if (firstName != null || firstName != " " || firstName != "") {
+        if (firstName != null && firstName != " " && firstName != "") {
             if (firstName != null) {
                 for (c in firstName) {
                     if (c.toString() != null) {
@@ -174,7 +174,7 @@ object Utils {
             initF = null
         }
 
-        if (lastName != null || lastName != " " || lastName != "") {
+        if (lastName != null && lastName != " " && lastName != "") {
             if (lastName != null) {
                 for (ch in lastName) {
                     if (ch.toString() != null) {
@@ -188,8 +188,10 @@ object Utils {
         } else {
             initL = null
         }
+
         if (initF == null && initL == null) return null
         else if (initF != null && initL == null) return initF
+        else if (initF == null && initL != null) return initL
         else return "$initF$initL"
     }
 
