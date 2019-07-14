@@ -109,7 +109,7 @@ object Utils {
         val array1 : Array<String> = arrayOf("минуту", "минуты", "минут")
         val array2 : Array<String> = arrayOf("час", "часа", "часов")
         val array3 : Array<String> = arrayOf("день", "дня", "дней")
-        val array4 : Array<String> = arrayOf("секунда", "секунды", "секунд")
+        val array4 : Array<String> = arrayOf("секунду", "секунды", "секунд")
 
         val array: Array<String> = if (type == 1) array1 else if (type == 2) array2 else if (type == 3) array3 else array4
         return when(sklCheck(digit)) {
