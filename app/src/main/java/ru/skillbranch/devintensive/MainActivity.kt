@@ -5,15 +5,18 @@ import android.graphics.PorterDuff
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.util.Log
+import android.view.KeyEvent
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import ru.skillbranch.devintensive.extensions.hideKeyboard
 import ru.skillbranch.devintensive.models.Bender
 
-class MainActivity : AppCompatActivity(), View.OnClickListener {
+class MainActivity : AppCompatActivity(), View.OnClickListener, TextView.OnEditorActionListener {
+
     lateinit var benderImage: ImageView
     lateinit var textTxt: TextView
     lateinit var messageEt: EditText
@@ -33,14 +36,16 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         sendBtn = iv_send
 
         val status = savedInstanceState?.getString("STATUS") ?: Bender.Status.NORMAL.name
-        var question = savedInstanceState?.getString("QUESTION") ?: Bender.Question.NAME.name
+        val question = savedInstanceState?.getString("QUESTION") ?: Bender.Question.NAME.name
 
-//        val rs: Boolean = savedInstanceState?.getBoolean("RESTART") ?: false
-//        if (rs) {
-//            question = "Это неправильный ответ. Давай все по новой\n$question"
-//        }
 
         benderObj = Bender(Bender.Status.valueOf(status), Bender.Question.valueOf(question))
+
+        val rs: Boolean = savedInstanceState?.getBoolean("RESTART") ?: false
+        if (rs) {
+            //benderObj.restartMessage()
+        }
+
 
 
         messageEt.setText(savedInstanceState?.getString("EDITTEXT"))
@@ -52,6 +57,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         textTxt.text = benderObj.askQuestion()
         sendBtn.setOnClickListener(this)
+        messageEt.setOnEditorActionListener(this)
     }
 
     override fun onStart() {
@@ -102,6 +108,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             benderImage.setColorFilter(Color.rgb(r, g, b), PorterDuff.Mode.MULTIPLY)
             textTxt.text = phrase
         }
+        this.hideKeyboard()
+    }
+
+
+    override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
 }

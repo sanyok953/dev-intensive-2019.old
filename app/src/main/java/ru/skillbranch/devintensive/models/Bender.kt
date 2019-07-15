@@ -35,6 +35,10 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
         }
     }
 
+    fun restartMessage(): Pair<String, Triple<Int, Int, Int>> {
+        return "Это неправильный ответ. Давай все по новой\n${question.question}" to status.color
+    }
+
     enum class Status(val color: Triple<Int, Int, Int>) {
         NORMAL(Triple(255, 255, 255)),
         WARNING(Triple(255, 120, 0)),
