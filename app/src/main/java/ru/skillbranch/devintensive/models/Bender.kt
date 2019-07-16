@@ -16,12 +16,34 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
 
     fun listenAnswer(answer: String): Pair<String, Triple<Int, Int, Int>> {
         restart = false
-        return if (question.answers.contains(answer)) {
+
+        if (!checkAnswer(answer)) {
+            val w = when (question) {
+                Question.NAME -> "Имя должно начинаться с заглавной буквы\n${question.question}" to status.color
+                Question.PROFESSION -> "Профессия должна начинаться со строчной буквы\n${question.question}" to status.color
+                Question.MATERIAL -> "Материал не должен содержать цифр\n${question.question}" to status.color
+                Question.BDAY -> "Год моего рождения должен содержать только цифры\n${question.question}" to status.color
+                Question.SERIAL -> "Серийный номер содержит только цифры, и их 7\n${question.question}" to status.color
+                Question.IDLE -> "break\n${question.question}" to status.color
+            }
+            if (w.first != "break") {
+                return w
+            }
+        }
+
+        val an = answer.toLowerCase()
+
+        if (question == Question.IDLE) {
+            status = Status.NORMAL
+            return "Отлично - ты справился\nНа этом все, вопросов больше нет" to status.color
+        }
+
+        return if (question.answers.contains(an)) {
             question = question.nextQuestion()
 
             "Отлично - ты справился\n${question.question}" to status.color
         } else {
-            mistakes ++
+            mistakes++
             if (mistakes < 3) {
                 status = status.nextStatus()
                 "Это неправильный ответ\n${question.question}" to status.color
@@ -35,8 +57,62 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
         }
     }
 
-    fun restartMessage(): Pair<String, Triple<Int, Int, Int>> {
-        return "Это неправильный ответ. Давай все по новой\n${question.question}" to status.color
+    private fun checkAnswer(answer: String): Boolean {
+        var ch = 'a'
+        var ret = false
+        if (question == Question.NAME) {
+            for (c: Char in answer) {
+                ch = c
+                break
+            }
+            ret = ch.isUpperCase()
+
+        } else if (question == Question.PROFESSION) {
+            for (c: Char in answer) {
+                ch = c
+                break
+            }
+            ret = ch.isLowerCase()
+
+        } else if (question == Question.MATERIAL) {
+            for (c: Char in answer) {
+                if (c.isDigit()) {
+                    ret = false
+                    break
+                }
+                ret = true
+            }
+
+        } else if (question == Question.BDAY) {
+            for (c: Char in answer) {
+                if (!c.isDigit()) {
+                    ret = false
+                    break
+                } else {
+                    ret = true
+                }
+            }
+
+
+        } else if (question == Question.SERIAL) {
+            if (answer.length == 7) {
+                for (c: Char in answer) {
+                    if (!c.isDigit()) {
+                        ret = false
+                        break
+                    } else {
+                        ret = true
+                    }
+                }
+            } else {
+                ret = false
+            }
+
+        } else if (question == Question.IDLE) {
+            ret = true
+        }
+
+        return ret
     }
 
     enum class Status(val color: Triple<Int, Int, Int>) {
@@ -71,7 +147,7 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
             override fun nextQuestion(): Question = IDLE
         },
         IDLE("На этом все, вопросов больше нет", listOf()) {
-            override fun nextQuestion(): Question = PROFESSION
+            override fun nextQuestion(): Question = IDLE
         };
 
         abstract fun nextQuestion(): Question
