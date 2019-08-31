@@ -36,5 +36,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun initViewModel() {
         viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+        viewModel.getChatData()
     }
 }

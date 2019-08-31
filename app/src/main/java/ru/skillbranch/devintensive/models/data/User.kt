@@ -1,9 +1,7 @@
-package ru.skillbranch.devintensive.models
+package ru.skillbranch.devintensive.models.data
 
 import ru.skillbranch.devintensive.utils.Utils
 import java.util.*
-import java.util.Collections.unmodifiableList
-
 
 
 data class User(
@@ -105,10 +103,14 @@ data class User(
     companion object Factory {
         private var lastId: Int = -1
         fun makeUser(fullName: String?): User {
-            lastId ++
+            lastId++
 
             val (firstName, lastName) = Utils.parseFullName(fullName)
-            return User(id = "$lastId", firstName = firstName, lastName = lastName)
+            return User(
+                id = "$lastId",
+                firstName = firstName,
+                lastName = lastName
+            )
         }
     }
 

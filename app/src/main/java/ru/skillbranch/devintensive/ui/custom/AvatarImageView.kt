@@ -4,8 +4,10 @@ import android.content.Context
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.Rect
+import android.graphics.drawable.BitmapDrawable
 import android.util.AttributeSet
 import android.widget.ImageView
+import ru.skillbranch.devintensive.utils.Utils
 
 class AvatarImageView @JvmOverloads constructor(
     context: Context,
@@ -29,6 +31,10 @@ class AvatarImageView @JvmOverloads constructor(
         "#A695E7",
         "#EE7AAE"
     )
+
+    fun setInitials(initials: String) {
+        setImageDrawable(BitmapDrawable(resources, Utils.generateAvatar(context, 40, initials)) )
+    }
 
     companion object {
         private const val DEFAULT_BORDER_WIDTH = 2f

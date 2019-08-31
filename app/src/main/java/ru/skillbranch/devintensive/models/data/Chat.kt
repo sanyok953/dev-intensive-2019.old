@@ -1,47 +1,44 @@
 package ru.skillbranch.devintensive.models.data
 
-import androidx.annotation.VisibleForTesting
 import ru.skillbranch.devintensive.extensions.shortFormat
 import ru.skillbranch.devintensive.models.BaseMessage
-import ru.skillbranch.devintensive.models.ImageMessage
-import ru.skillbranch.devintensive.models.TextMessage
-import ru.skillbranch.devintensive.models.User
 import ru.skillbranch.devintensive.utils.Utils
 import java.util.*
 
-data class Chat(
+class Chat (
     val id: String,
     val title: String,
+    // По умолчанию - пустая коллекция
     val members: List<User> = listOf(),
     var messages: MutableList<BaseMessage> = mutableListOf(),
     var isArchived: Boolean = false
 ) {
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun unreadableMessageCount(): Int {
-        //TODO implement me
+        // Кол во непрочитанных сообщений
+        return 0
     }
 
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    fun lastMessageDate(): Date? {
-        //TODO implement me
+    private fun lastMessageDate(): Date? {
+        // Последняя дата сообщений в списке messag...
+        return Date()
     }
 
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    fun lastMessageShort(): Pair<String, String?> = when(val lastMessage = messages.lastOrNull()){
-       //TODO implement me
+    private fun lastMessageShort(): String {
+        // Краткое содержание последнего сообщения
+        return "Сообщений еще нет"
     }
 
     private fun isSingle(): Boolean = members.size == 1
 
-    fun toChatItem(): ChatItem {
-        return if (isSingle()) {
+    fun toChatItem(): ChatItem =
+        if (isSingle()) {
             val user = members.first()
             ChatItem(
                 id,
                 user.avatar,
                 Utils.toInitials(user.firstName, user.lastName) ?: "??",
                 "${user.firstName ?: ""} ${user.lastName ?: ""}",
-                lastMessageShort().first,
+                lastMessageShort(),
                 unreadableMessageCount(),
                 lastMessageDate()?.shortFormat(),
                 user.isOnline
@@ -52,22 +49,10 @@ data class Chat(
                 null,
                 "",
                 title,
-                lastMessageShort().first,
+                lastMessageShort(),
                 unreadableMessageCount(),
                 lastMessageDate()?.shortFormat(),
-                false,
-                ChatType.GROUP,
-                lastMessageShort().second
+                false
             )
         }
-    }
 }
-
-enum class ChatType{
-    SINGLE,
-    GROUP,
-    ARCHIVE
-}
-
-
-
