@@ -13,7 +13,7 @@ import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.models.data.ChatItem
 import ru.skillbranch.devintensive.ui.custom.AvatarImageView
 
-class ChatAdapter: RecyclerView.Adapter<ChatAdapter.SingleViewHolder>() {
+class ChatAdapter(val listener: (ChatItem) -> Unit): RecyclerView.Adapter<ChatAdapter.SingleViewHolder>() {
 
     var items: List<ChatItem> = listOf()
 
@@ -28,7 +28,7 @@ class ChatAdapter: RecyclerView.Adapter<ChatAdapter.SingleViewHolder>() {
 
     override fun onBindViewHolder(holder: SingleViewHolder, position: Int) {
         Log.d("M_ChatAdapter", "onBindViewHolder $position")
-        holder.bind(items[position])
+        holder.bind(items[position], listener)
     }
 
     fun updateData(data: List<ChatItem>) {
@@ -40,11 +40,12 @@ class ChatAdapter: RecyclerView.Adapter<ChatAdapter.SingleViewHolder>() {
         override val containerView: View?
             get() = itemView
 
-        fun bind(item: ChatItem) {
+        fun bind(item: ChatItem, listener: (ChatItem) -> Unit) {
             if (item.avatar == null) {
                 iv_avatar_single.setInitials(item.initials)
             } else {
                 //TODO setDrawable
+                //iv_avatar_single.setInitials("??")
             }
             sv_indicator.visibility = if (item.isOnline) View.VISIBLE else View.GONE
             with(tv_date_single) {
@@ -57,6 +58,11 @@ class ChatAdapter: RecyclerView.Adapter<ChatAdapter.SingleViewHolder>() {
             }
             tv_title_single.text = item.title
             tv_message_single.text = item.shortDescription
+
+            itemView.setOnClickListener {
+                listener.invoke(item)
+            }
+
         }
     }
 }
