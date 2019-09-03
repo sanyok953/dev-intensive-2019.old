@@ -28,4 +28,8 @@ class MainViewModel : ViewModel() {
         copy.addAll(newItems)
         chats.value = copy.sortedBy { it.id.toInt() }
     }
+
+    fun addToArchive(id: String) {
+
+    }
 }
