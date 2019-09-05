@@ -64,11 +64,11 @@ class ChatItemTouchHelperCallback(
         actionState: Int,
         isCurrentlyActive: Boolean
     ) {
-        // Позволяет на канве отрисовывать бэкграунд для нашего элемента
+
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
             val itemView = viewHolder.itemView
             drawBackground(canvas, itemView, dX)
-            //drawIcon(canvas, itemView, dX)
+            drawIcon(canvas, itemView, dX)
         }
         super.onChildDraw(canvas, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
     }
@@ -77,7 +77,7 @@ class ChatItemTouchHelperCallback(
         with(bgRect) {
             left = dX //itemView.left говорит у себя поставить не забыть. Странный какой-то...
             top = itemView.top.toFloat()
-            right = itemView.right.toFloat()
+            right = itemView.left.toFloat()
             bottom = itemView.bottom.toFloat()
         }
 
@@ -88,23 +88,23 @@ class ChatItemTouchHelperCallback(
         canvas.drawRect(bgRect, bgPaint)
     }
 
-//    private fun drawIcon(canvas: Canvas, itemView: View, dX: Float) {
-//        val icon = itemView.resources.getDrawable(R.drawable.ic_archive_black_24dp,
-//            itemView.context.theme)
-//        val iconSize = itemView.resources.getDimensionPixelSize(R.dimen.icon_size)
-//        val space = itemView.resources.getDimensionPixelSize(R.dimen.spacing_normal_16)
-//
-//        val margin = (itemView.bottom - itemView.top - iconSize) / 2
-//        with(iconBounds) {
-//            left = itemView.right + dX.toInt() + space
-//            top = itemView.top + margin
-//            right = itemView.right + dX.toInt() + iconSize + space
-//            bottom = itemView.bottom - margin
-//        }
-//
-//        icon.bounds = iconBounds
-//        icon.draw(canvas)
-//    }
+    private fun drawIcon(canvas: Canvas, itemView: View, dX: Float) {
+        val icon = itemView.resources.getDrawable(R.drawable.ic_archive_black_24dp,
+            itemView.context.theme)
+        val iconSize = itemView.resources.getDimensionPixelSize(R.dimen.icon_size)
+        val space = itemView.resources.getDimensionPixelSize(R.dimen.spacing_normal_16)
+
+        val margin = (itemView.bottom - itemView.top - iconSize) / 2
+        with(iconBounds) {
+            left = itemView.right + dX.toInt() + space
+            top = itemView.top + margin
+            right = itemView.right + dX.toInt() + iconSize + space
+            bottom = itemView.bottom - margin
+        }
+
+        icon.bounds = iconBounds
+        icon.draw(canvas)
+    }
 }
 
 interface ItemTouchViewHolder {

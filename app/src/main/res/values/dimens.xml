@@ -18,5 +18,6 @@
     <dimen name="avatar_item_size">40dp</dimen>
     <dimen name="item_size">72dp</dimen>
     <dimen name="counter_size">20dp</dimen>
+    <dimen name="icon_size">24dp</dimen>
 
 </resources>

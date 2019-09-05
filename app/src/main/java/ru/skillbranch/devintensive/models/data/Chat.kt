@@ -5,16 +5,15 @@ import ru.skillbranch.devintensive.models.BaseMessage
 import ru.skillbranch.devintensive.utils.Utils
 import java.util.*
 
-class Chat (
+data class Chat (
     val id: String,
     val title: String,
-    // По умолчанию - пустая коллекция
     val members: List<User> = listOf(),
     var messages: MutableList<BaseMessage> = mutableListOf(),
     var isArchived: Boolean = false
 ) {
     fun unreadableMessageCount(): Int {
-        // Кол во непрочитанных сообщений
+        // Кол-во непрочитанных
         return 0
     }
 
@@ -38,21 +37,30 @@ class Chat (
                 user.avatar,
                 Utils.toInitials(user.firstName, user.lastName) ?: "??",
                 "${user.firstName ?: ""} ${user.lastName ?: ""}",
-                lastMessageShort(),
+                lastMessageShort(), // first
                 unreadableMessageCount(),
                 lastMessageDate()?.shortFormat(),
                 user.isOnline
             )
         } else {
+            val messageShort = lastMessageShort()
             ChatItem(
                 id,
                 null,
                 "",
                 title,
-                lastMessageShort(),
+                messageShort, // first
                 unreadableMessageCount(),
                 lastMessageDate()?.shortFormat(),
                 false
+                //ChatType.GROUP,
+                //messageShort // second
             )
         }
+}
+
+enum class ChatType {
+    SINGLE,
+    GROUP,
+    ARCHIVE
 }
