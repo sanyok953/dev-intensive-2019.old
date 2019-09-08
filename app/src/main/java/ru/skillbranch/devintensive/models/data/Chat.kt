@@ -2,6 +2,8 @@ package ru.skillbranch.devintensive.models.data
 
 import ru.skillbranch.devintensive.extensions.shortFormat
 import ru.skillbranch.devintensive.models.BaseMessage
+import ru.skillbranch.devintensive.models.ImageMessage
+import ru.skillbranch.devintensive.models.TextMessage
 import ru.skillbranch.devintensive.utils.Utils
 import java.util.*
 
@@ -13,18 +15,18 @@ data class Chat (
     var isArchived: Boolean = false
 ) {
     fun unreadableMessageCount(): Int {
-        // Кол-во непрочитанных
-        return 0
+        var messagesUnread = messages.filter { !it.isReaded }
+        return messagesUnread.count()
     }
 
-    private fun lastMessageDate(): Date? {
-        // Последняя дата сообщений в списке messag...
-        return Date()
+    fun lastMessageDate(): Date? {
+        return messages.lastOrNull()?.date
     }
 
-    private fun lastMessageShort(): String {
-        // Краткое содержание последнего сообщения
-        return "Сообщений еще нет"
+    fun lastMessageShort(): Pair<String?, String?> = when(val lastMessage = messages.lastOrNull()) {
+        is TextMessage -> lastMessage.text to "${lastMessage.from?.firstName}"
+        is ImageMessage -> "${lastMessage.from?.firstName} - отправил фото" to "${lastMessage.from?.firstName}"
+        else -> "Сообщений еще нет" to ""
     }
 
     private fun isSingle(): Boolean = members.size == 1
@@ -37,7 +39,7 @@ data class Chat (
                 user.avatar,
                 Utils.toInitials(user.firstName, user.lastName) ?: "??",
                 "${user.firstName ?: ""} ${user.lastName ?: ""}",
-                lastMessageShort(), // first
+                lastMessageShort().first, // first
                 unreadableMessageCount(),
                 lastMessageDate()?.shortFormat(),
                 user.isOnline
@@ -49,12 +51,12 @@ data class Chat (
                 null,
                 "",
                 title,
-                messageShort, // first
+                lastMessageShort().first, // first
                 unreadableMessageCount(),
                 lastMessageDate()?.shortFormat(),
-                false
-                //ChatType.GROUP,
-                //messageShort // second
+                false,
+                ChatType.GROUP,
+                lastMessageShort().second // second
             )
         }
 }
