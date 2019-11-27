@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.children
 import androidx.lifecycle.Observer
@@ -16,15 +17,14 @@ import com.google.android.material.chip.Chip
 import kotlinx.android.synthetic.main.activity_group.*
 import kotlinx.android.synthetic.main.activity_group.fab
 import kotlinx.android.synthetic.main.activity_group.toolbar
-import kotlinx.android.synthetic.main.activity_main.*
 import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.models.data.UserItem
 import ru.skillbranch.devintensive.ui.adapters.UserAdapter
 import ru.skillbranch.devintensive.viewmodels.GroupViewModel
 
-class GroupActivity : androidx.appcompat.app.AppCompatActivity() {
+class GroupActivity : AppCompatActivity() {
 
-    private lateinit var usersAdapter: UserAdapter
+    private lateinit var userAdapter: UserAdapter
     private lateinit var viewModel: GroupViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,12 +41,12 @@ class GroupActivity : androidx.appcompat.app.AppCompatActivity() {
         val searchView = searchItem?.actionView as SearchView
         searchView.queryHint = "Введите имя пользователя"
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String): Boolean {
+            override fun onQueryTextSubmit(query: String?): Boolean { // or null ?
                 viewModel.handleSearchQuery(query)
                 return true
             }
 
-            override fun onQueryTextChange(newText: String): Boolean {
+            override fun onQueryTextChange(newText: String?): Boolean {
                 viewModel.handleSearchQuery(newText)
                 return true
             }
@@ -69,13 +69,14 @@ class GroupActivity : androidx.appcompat.app.AppCompatActivity() {
         toolbar.background = getDrawable(R.color.color_primary)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = "Create group"
     }
 
     private fun initViews() {
-        usersAdapter = UserAdapter { viewModel.handleSelectedItem(it.id) }
+        userAdapter = UserAdapter { viewModel.handleSelectedItem(it.id) }
         val divider = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
         with(rv_user_list) {
-            adapter = usersAdapter
+            adapter = userAdapter
             layoutManager = LinearLayoutManager(this@GroupActivity)
             addItemDecoration(divider)
         }
@@ -89,7 +90,7 @@ class GroupActivity : androidx.appcompat.app.AppCompatActivity() {
 
     private fun initViewModel() {
         viewModel = ViewModelProviders.of(this).get(GroupViewModel::class.java)
-        viewModel.getUsersData().observe(this, Observer { usersAdapter.updateData(it) })
+        viewModel.getUsersData().observe(this, Observer { userAdapter.updateData(it) })
         viewModel.getSelectedData().observe(this, Observer {
             updateChips(it)
             toggleFab(it.size > 1)
@@ -112,7 +113,9 @@ class GroupActivity : androidx.appcompat.app.AppCompatActivity() {
             chipBackgroundColor = ColorStateList.valueOf(getColor(R.color.color_primary_light))
             setTextColor(Color.WHITE)
         }
-        chip.setOnCloseIconClickListener { viewModel.handleRemoveChip(it.tag.toString()) }
+        chip.setOnCloseIconClickListener {
+            viewModel.handleRemoveChip(it.tag.toString())
+        }
         chip_group.addView(chip)
     }
 
@@ -121,14 +124,14 @@ class GroupActivity : androidx.appcompat.app.AppCompatActivity() {
         chip_group.visibility = if (listUsers.isEmpty()) View.GONE else View.VISIBLE
 
         val users = listUsers
-            .associate { user -> user.id to user }
+            .associateBy { user -> user.id } //.associate { user -> user.id to user }
             .toMutableMap()
 
         val views = chip_group.children
-            .associate { view -> view.tag to view }
+            .associateBy { view -> view.tag }//.associate { view -> view.tag to view }
 
         for((k, v) in views) {
-            if (users.containsKey(k)) chip_group.removeView(v)
+            if (!users.containsKey(k)) chip_group.removeView(v)
             else users.remove(k)
         }
         users.forEach{(_, v) -> addChipToGroup(v)}
